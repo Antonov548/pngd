@@ -29,10 +29,7 @@ glm::vec3 ray_color(const ray& r, const scene& s)
   {
     return glm::vec3{1, 0, 0};
   }
-  else
-  {
-    return glm::vec3{1, 1, 1};
-  }
+
   auto unit_direction = glm::normalize(r.direction);
   float t = 0.5 * (unit_direction.y + 1.0);
   return (1.0f - t) * glm::vec3(1.0, 1.0, 1.0) + t * glm::vec3(0.5, 0.7, 1.0);
@@ -51,8 +48,8 @@ buffer render_to_png(const scene& s, const camera& c, uint32_t samples)
 
       for (uint32_t k{0}; k < samples; ++k)
       {
-        const auto u{float(j) / (s.width - 1)};
-        const auto v{float(s.height - i) / (s.height - 1)};
+        const auto u{static_cast<float>(j) / (s.width - 1)};
+        const auto v{static_cast<float>(s.height - i) / (s.height - 1)};
 
         ray r{c.position, c.lower_left_corner + u * c.horizontal +
                               v * c.vertical - c.position};

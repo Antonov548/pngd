@@ -15,7 +15,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glm)
 
-set(TARGET_NAME pngd)
+set(LIBRARY_NAME pngd)
+set(TARGET_NAME launcher)
 
 set(ALL_HEADERS
   src/scene.h
@@ -23,24 +24,36 @@ set(ALL_HEADERS
   src/render.h
   src/utils.h
   src/primitives.h
+  src/mesh.h
+  src/trianglesurface.h
   src/lodepng/lodepng.h
 )
 
-set(ALL_SOURCES
-  src/main.cpp
+set(LIBRARY_SOURCES
   src/scene.cpp
   src/render.cpp
   src/camera.cpp
   src/utils.cpp
   src/primitives.cpp
+  src/mesh.cpp
+  src/trianglesurface.cpp
   src/lodepng/lodepng.cpp
 )
 
-add_executable(${TARGET_NAME} ${ALL_SOURCES} ${ALL_HEADERS})
-target_include_directories(${TARGET_NAME} PUBLIC ${DEPS_INSTALL_DIR}/include)
+set(ALL_SOURCES
+  ${LIBRARY_SOURCES}
+  app/main.cpp
+)
 
-target_link_directories(${TARGET_NAME} PUBLIC ${DEPS_INSTALL_DIR}/lib)
-target_link_libraries(${TARGET_NAME} PUBLIC glm::glm)
+add_library(${LIBRARY_NAME} ${LIBRARY_SOURCES})
+
+target_include_directories(${LIBRARY_NAME} PUBLIC ${DEPS_INSTALL_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_link_directories(${LIBRARY_NAME} PUBLIC ${DEPS_INSTALL_DIR}/lib)
+target_link_libraries(${LIBRARY_NAME} PUBLIC glm::glm)
+
+add_executable(${TARGET_NAME} app/main.cpp ${ALL_HEADERS})
+target_link_libraries(${TARGET_NAME} PUBLIC ${LIBRARY_NAME})
 
 set_target_properties(
     ${TARGET_NAME}

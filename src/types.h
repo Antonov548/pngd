@@ -37,7 +37,7 @@ struct intersection
 
 using triangle = std::array<size_t, 3>;
 
-struct surface
+struct triangle_surface
 {
   std::vector<glm::vec3> vertices;
   std::vector<triangle> triangles;

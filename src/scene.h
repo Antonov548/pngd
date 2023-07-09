@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include "types.h"
@@ -14,5 +15,7 @@ struct scene
 
   std::vector<std::unique_ptr<hittable>> objects;
 };
+
+bool add_obj(const std::filesystem::path& path, scene& s);
 
 }  // namespace pngd

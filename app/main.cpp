@@ -30,18 +30,17 @@ int main(int argc, char const* argv[])
 
     pngd::scene s{.width = width, .height = height};
 
-    s.objects.push_back(
-        std::make_unique<pngd::sphere>(glm::vec3{0, 0, -1}, 0.5));
-    s.objects.push_back(
-        std::make_unique<pngd::sphere>(glm::vec3{1, 0, -1}, 0.7));
+    pngd::add_obj("/home/antonov548/pngd/tests/obj/scapula.obj", s);
 
-    glm::vec3 origin{0, 0, 2};
-    glm::vec3 direction{0, 0, -1};
-    glm::vec3 up{1, 0, 0};
+    glm::vec3 origin{-1087, -1537, -1391};
+    glm::vec3 direction{78, -19, -788};
+    origin += glm::normalize(direction - origin) * 1700.f;
+
+    glm::vec3 up{0, 0, 1};
 
     const auto c{pngd::make_camera(origin, direction, up, 45, aspect_ratio)};
 
-    const auto png{pngd::render_to_png(s, c, 1)};
+    const auto png{pngd::render_to_png(s, c, 20)};
     pngd::save_file(png, output_file);
 
     return 0;

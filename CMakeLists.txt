@@ -19,23 +19,27 @@ set(LIBRARY_NAME pngd)
 set(TARGET_NAME launcher)
 
 set(ALL_HEADERS
+  src/bbox.h
   src/scene.h
   src/camera.h
   src/render.h
   src/utils.h
   src/primitives.h
   src/mesh.h
+  src/kdtree.h
   src/trianglesurface.h
   src/lodepng/lodepng.h
 )
 
 set(LIBRARY_SOURCES
+  src/bbox.cpp
   src/scene.cpp
   src/render.cpp
   src/camera.cpp
   src/utils.cpp
   src/primitives.cpp
   src/mesh.cpp
+  src/kdtree.cpp
   src/trianglesurface.cpp
   src/lodepng/lodepng.cpp
 )

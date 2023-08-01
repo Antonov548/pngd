@@ -21,7 +21,7 @@ triangle_surface make_surface(const tinyobj::attrib_t& attr,
 
     for (size_t j{0}; j < 3; ++j)
     {
-      const auto vertex_idx{mesh.indices[i + j].vertex_index};
+      const auto vertex_idx{mesh.indices[i * 3 + j].vertex_index};
       const auto it_idx{vm.find(vertex_idx)};
 
       if (it_idx == std::end(vm))

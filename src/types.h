@@ -26,6 +26,11 @@ struct ray
   glm::vec3 direction;
 };
 
+struct material
+{
+  virtual ~material() = default;
+};
+
 struct intersection
 {
   glm::vec3 point;
@@ -33,7 +38,10 @@ struct intersection
 
   float t;
   bool front_face;
+  material* mat;
 };
+
+using bbox = std::pair<glm::vec3, glm::vec3>;
 
 using triangle = std::array<size_t, 3>;
 

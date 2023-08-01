@@ -22,7 +22,7 @@ bool add_obj(const std::filesystem::path& path, scene& s)
   for (const auto& shape : shapes)
   {
     const auto surface{make_surface(attr, shape.mesh)};
-    s.objects.push_back(std::make_unique<mesh>(std::move(surface)));
+    s.objects.push_back(std::make_unique<mesh>(std::move(surface), nullptr));
   }
 
   return true;

@@ -1,6 +1,7 @@
 #include "render.h"
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 
 #include "lodepng/lodepng.h"
@@ -10,18 +11,19 @@ namespace pngd
 
 glm::vec3 ray_color(const ray& r, const scene& s)
 {
-  intersection rec;
-  intersection temp_rec;
+  intersection in;
+  intersection temp_in;
+
   bool hit_anything = false;
   auto closest_so_far = std::numeric_limits<float>::max();
 
   for (const auto& object : s.objects)
   {
-    if (object->hit(r, 0.001, closest_so_far, temp_rec))
+    if (object->hit(r, 0.001, closest_so_far, temp_in))
     {
       hit_anything = true;
-      closest_so_far = temp_rec.t;
-      rec = temp_rec;
+      closest_so_far = temp_in.t;
+      in = temp_in;
     }
   }
 
@@ -32,13 +34,17 @@ glm::vec3 ray_color(const ray& r, const scene& s)
 
   auto unit_direction = glm::normalize(r.direction);
   float t = 0.5 * (unit_direction.y + 1.0);
-  return (1.0f - t) * glm::vec3(1.0, 1.0, 1.0) + t * glm::vec3(0.5, 0.7, 1.0);
+  return glm::vec3(1, 1, 1);
 }
 
 buffer render_to_png(const scene& s, const camera& c, uint32_t samples)
 {
   bitmap pixels;
   pixels.reserve(s.width * s.height * 4);
+
+  std::random_device rd;
+  std::default_random_engine gen(rd());
+  std::uniform_real_distribution<float> rand(0, 1.f);
 
   for (uint32_t i{0}; i < s.height; ++i)
   {
@@ -48,18 +54,19 @@ buffer render_to_png(const scene& s, const camera& c, uint32_t samples)
 
       for (uint32_t k{0}; k < samples; ++k)
       {
-        const auto u{static_cast<float>(j) / (s.width - 1)};
-        const auto v{static_cast<float>(s.height - i) / (s.height - 1)};
+        const auto u{static_cast<float>(j + rand(gen)) / (s.width - 1)};
+        const auto v{static_cast<float>(s.height - i - rand(gen)) /
+                     (s.height - 1)};
 
         ray r{c.position, c.lower_left_corner + u * c.horizontal +
                               v * c.vertical - c.position};
 
-        color = ray_color(r, s);
+        color += ray_color(r, s);
       }
 
-      pixels.push_back(color.r * 255.f);
-      pixels.push_back(color.y * 255.f);
-      pixels.push_back(color.z * 255.f);
+      pixels.push_back(color.r * 255.f * 1.f / samples);
+      pixels.push_back(color.y * 255.f * 1.f / samples);
+      pixels.push_back(color.z * 255.f * 1.f / samples);
       pixels.push_back(255);
     }
   }
